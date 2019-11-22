@@ -67,17 +67,6 @@ class Menu extends CI_Controller {
 		$insert = $this->db->insert("tbl_menu",$dataArray);
 		$last_id = $this->db->insert_id();
 		if($insert){
-			foreach ($post['menu_bahan'] as $key => $value) {
-				# code...
-			
-				$dataArray = array(
-					"id_bahan"			=> $value['id_bahan'],
-					"jumlah_pemakaian"	=> $value['jumlah_digunakan'],
-					"id_produk"			=> $last_id,
-				);
-				$insert = $this->db->insert("tbl_bahan_menu",$dataArray);
-				
-			}
 			$this->m_umum->generatePesan("Berhasil menambahkan data","berhasil");
 			redirect('admin/menu');
 		}else{
@@ -122,34 +111,6 @@ class Menu extends CI_Controller {
 		/*====================================== END UPLOADING FEATEURE IMAGE ======================================*/
 		$update = $this->db->update("tbl_menu",$dataArray,array("menu_id" => $id));
 		if($update){
-			if (!empty($post['menu_bahan_edit'])) {
-				foreach ($post['menu_bahan_edit'] as $key => $value) {
-					# code...
-				
-					$dataArray = array(
-						"id_bahan"			=> $value['id_bahan'],
-						"jumlah_pemakaian"	=> $value['jumlah_digunakan'],
-						"id_produk"			=> $id,
-
-					);
-					 $this->db->update("tbl_bahan_menu",$dataArray,array("bahan_menu_id" => $value['id_bahan_menu']));
-					
-				}
-			}
-			if (!empty($post['menu_bahan'])) {
-				foreach ($post['menu_bahan'] as $key => $value) {
-					# code...
-				
-					$dataArray = array(
-						"id_bahan"			=> $value['id_bahan'],
-						"jumlah_pemakaian"	=> $value['jumlah_digunakan'],
-						"id_produk"			=> $id,
-
-					);
-					$insert = $this->db->insert("tbl_bahan_menu",$dataArray);
-					
-				}
-			}
 			$this->m_umum->generatePesan("Berhasil update data","berhasil");
 			redirect('admin/menu');
 		}else{
@@ -195,14 +156,85 @@ class Menu extends CI_Controller {
 			$insert = $this->db->insert("tbl_menu",$newProduk);
 			$last_id = $this->db->insert_id();
 
-			$dataArray = array(
-				"id_bahan"			=> '2',
-				"jumlah_pemakaian"	=> '1',
-				"id_produk"			=> $last_id,
-			);
-			$insert = $this->db->insert("tbl_bahan_menu",$dataArray);
-
 			// $dataInsert[] = $newProduk;
+		}
+	}
+	public function generateProduk(){
+		$this->load->library('PHPExcel.php');
+		$tmpfname = FCPATH.'uploads\resto_mei.xls';
+		// $tmpfname = $_FILES['file']['tmp_name'];
+		$excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);
+		$excelObj = $excelReader->load($tmpfname);
+		$worksheet = $excelObj->getSheet(0);
+		$lastRow = $worksheet->getHighestRow();
+		$dataBaru = [];
+		for ($row = 2; $row <= $lastRow; $row++) {
+			$dataProduk = ['produk_code'=>$worksheet->getCell('D'.$row)->getValue(),
+							'produk_name'=>$worksheet->getCell('G'.$row)->getValue(),
+							'produk_harga'=>$worksheet->getCell('L'.$row)->getValue()];
+			$numbernya = substr($dataProduk['produk_code'],1);
+			$codenya = substr($dataProduk['produk_code'],0,1);
+			if (is_numeric($dataProduk['produk_harga']) && is_numeric($numbernya) && ctype_alpha($codenya)) {
+				$dataBaru[$dataProduk['produk_code']] = $dataProduk;
+			}
+		}
+
+		foreach ($dataBaru as $key => $value) {
+			$nums = $this->db->query("select produk_code from tbl_produk where produk_code = '".$value['produk_code']."'")->num_rows();
+			if ($nums == 0) {
+				$this->db->insert('tbl_produk',$value);
+			}
+		}
+	}
+
+
+	public function generateExcel(){
+		$this->load->library('PHPExcel.php');
+		$tmpfname = FCPATH.'uploads/resto_mei.xls';
+		// $tmpfname = $_FILES['file']['tmp_name'];
+		$excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);
+		$excelObj = $excelReader->load($tmpfname);
+		$worksheet = $excelObj->getSheet(0);
+		$lastRow = $worksheet->getHighestRow();
+
+		$codeTransaksi = '';
+		$tanggalTransaksi = '';
+		$dataBaru = [];
+		for ($row = 2; $row <= $lastRow; $row++) {
+			// $getDate = $worksheet->getCell('U'.$row)->getValue();
+			// if (!empty($getDate)) {
+			// 	echo (($getDate - 25569) * 86400);
+			// 	echo date("Y-d-m", (($getDate - 25569) * 86400));
+			// 	die;
+			// }
+			if (!empty($worksheet->getCell('B'.$row)->getValue()) && 
+				!empty($worksheet->getCell('D'.$row)->getValue()) && 
+				!empty($worksheet->getCell('K'.$row)->getValue()) && 
+				is_numeric($worksheet->getCell('K'.$row)->getValue())
+				) {
+				$codeTransaksi = $worksheet->getCell('B'.$row)->getValue();
+
+			}
+			$dataProduk = ['id_menu_code'=>$worksheet->getCell('D'.$row)->getValue(),
+							'transaksi_qty'=>$worksheet->getCell('K'.$row)->getValue(),
+							'id_transaksi_code'=>$codeTransaksi];
+			$numbernya = substr($dataProduk['id_menu_code'],1);
+			$codenya = substr($dataProduk['id_menu_code'],0,1);
+			if (!empty($codeTransaksi) && !empty($dataProduk['id_menu_code']) && !empty($dataProduk['transaksi_qty'])) {
+				if (is_numeric($numbernya) && ctype_alpha($codenya)) {
+					if (empty($dataBaru[$codeTransaksi])) {
+						$dataBaru[$codeTransaksi] = [];
+					}
+					$dataBaru[$codeTransaksi][] = $dataProduk;
+				}
+			}
+		}
+		$start = strtotime("1 May 2019");
+		$end = strtotime("31 May 2019");
+		foreach ($dataBaru as $key => $value) {
+			$timestamp = mt_rand($start, $end);
+			$this->db->insert('tbl_transaksi',['transaksi_no'=>$key,'transaksi_tgl'=>date("Y-m-d", $timestamp)]);
+			$this->db->insert_batch('tbl_detail_transaksi',$value);
 		}
 	}
 	

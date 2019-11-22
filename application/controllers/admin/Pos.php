@@ -11,13 +11,13 @@ class Pos extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('m_umum');
-		$this->load->model('m_produk');
+		$this->load->model('m_menu');
 		$this->load->model('m_transaksi');
 	}
 
 	public function index(){
 		$data['userLogin'] = $this->session->userdata('loginData');
-		$data['barang_data'] = $this->m_produk->getlistProduk();
+		$data['barang_data'] = $this->m_menu->getlistMenu();
 		$data['no_transaksi'] = $this->getNoOrder();
 		// $data['dataApriod'] = $this->getApriori();
 		$data['base_foto'] = base_url();
@@ -33,44 +33,39 @@ class Pos extends CI_Controller
 		}
 		// ini item yang di pilih oleh kasir di pos
 		$dataSelectCodeBarang = [];
-		$dataSelectBarang = $this->db->query("select menu_code from tbl_menu where menu_id in ('".$id_barang."')")->result();
+		$dataSelectBarang = $this->db->query("select menu_code from tbl_menu where menu_code in ('".$id_barang."')")->result();
 		foreach ($dataSelectBarang as $key => $value) {
-			$dataSelectCodeBarang[] = $value->produk_code;
+			$dataSelectCodeBarang[] = $value->menu_code;
 		}
+
 
 		// Item Set bulan
 		$tanggal = array();
 		$dataBulan = array();
-		for($i=1;$i<13;$i++) {
-			$dateAwal = mktime(0, 0, 0, date("m")-($i), date("d"), date("Y"));
-			$tanggalAwal = date('Y-m-d',$dateAwal);
-			if ($i == 1) {
-				$tanggalMax = date('Y-m-d');
-			}else{
-				$dateMax = mktime(0, 0, 0, date("m")-(($i-1)), date("d"), date("Y"));
-				$tanggalMax = date('Y-m-d',$dateMax);
-			}
+		$bulanNya = ['02','06','05'];
+		for($i=0;$i<count($bulanNya);$i++) {
+			$tanggalAwal = date('Y-'.$bulanNya[$i].'-01');
+			$tanggalMax = date('Y-m-t',strtotime($tanggalAwal));
 			//contoh jika sekarang awalnya tanggal 01-08-2019 maka maxnya 01-07-2019
 			//kalau sudah masuk looping ke dua jadi tanggal 01-07-2019 maka maxnya 01-06-2019 
 			
 			//ini mengambil data transaksi yang menganduk produk yang dipilih
 			$tanggal[] = array('awal' => $tanggalAwal,'max' => $tanggalMax);
 			$pilihTransaksi = [];
-			$selectTransaksi = $this->db->query("select * from tbl_detail_transaksi dt
-					inner join tbl_transaksi t on t.transaksi_id = dt.id_transaksi
-					where t.transaksi_tgl >= '".$tanggalAwal."' and t.transaksi_tgl <= '".$tanggalMax."' and dt.id_menu in ('".$id_barang."')")->result();
-
+			$selectTransaksi = $this->db->query("select t.transaksi_no from tbl_detail_transaksi dt
+					inner join tbl_transaksi t on t.transaksi_no = dt.id_transaksi_code
+					where t.transaksi_tgl >= '".$tanggalAwal."' and t.transaksi_tgl <= '".$tanggalMax."' and dt.id_menu_code in ('".$id_barang."') limit 10")->result();
 			foreach ($selectTransaksi as $key => $value) {
-				$pilihTransaksi[]=$value->transaksi_id;
+				$pilihTransaksi[]=$value->transaksi_no;
 			}
 
 			//ini mengambil semua kode produk yang dipilih di transaksi
 			$pilihTransaksi = implode("','", $pilihTransaksi);
-			$data = $this->db->query("SELECT dt.id_menu,p.menu_id,p.menu_code,p.menu_name, COUNT(*) as jumlah_kali
+			$data = $this->db->query("SELECT p.menu_code,p.menu_name
 					FROM tbl_detail_transaksi dt
-					inner join tbl_transaksi t on t.transaksi_id = dt.id_transaksi
-					inner join tbl_menu p on p.menu_id = dt.id_menu
-					where t.transaksi_id in ('".$pilihTransaksi."')
+					inner join tbl_transaksi t on t.transaksi_no = dt.id_transaksi_code
+					inner join tbl_menu p on p.menu_code = dt.id_menu_code
+					where t.transaksi_no in ('".$pilihTransaksi."')
 					group by menu_id")->result_array();
 			// if ($i == 12) {
 			// 	echo $tanggalAwal.''.$tanggalMax;
@@ -190,7 +185,7 @@ class Pos extends CI_Controller
 			}
 		}
 
-		$minimalConfidend = 0.6;
+		$minimalConfidend = 0.66;
 		$itemConfidentNew = $dataAll['nilaiConfident'];
 		foreach ($itemConfidentNew as $key => $value) {
 			// perhitungan nilai itemset di bawah 60% atau 0.6
@@ -219,13 +214,25 @@ class Pos extends CI_Controller
 				}
 			}
 		}
+		function cmp($a, $b) {
+		    return $a['nilai'] < $b['nilai'];
+		}
 
+		usort($itemConfidentNew, "cmp");
 		// $dataAll['dataAPP'] = $itemConfidentNew;
 		// if ($itemTerbanyak['index'] == -1) {
 		// 	$dataAll['dataConfident'] = [];
-		$dataAll['dataApriori'] = [];
+		// $dataAll['dataApriori'] = [];
 		// }else{
-		$dataAll['dataConfident'] = $itemConfidentNew;
+		$temConfiden = [];
+		$no = 0;
+		foreach ($itemConfidentNew as $key => $value) {
+			if ($no < 10) {
+				$temConfiden[] = $value;
+			}
+			$no ++;
+		}
+		$dataAll['dataConfident'] = $temConfiden;
 			// $dataAll['dataApriori'] = $itemConfidentNew[$itemTerbanyak['index']];
 		// }
 
@@ -415,7 +422,7 @@ class Pos extends CI_Controller
 		}
 
 		$no+=2;
-		$sheet->setCellValue('A'.$no, 'Nilai Confidence Min 60%');
+		$sheet->setCellValue('A'.$no, 'Nilai Confidence Min 66%');
 		$no++;
 		foreach ($dataAll->dataConfident as $key => $value) {
 			$text = '';
@@ -501,8 +508,7 @@ class Pos extends CI_Controller
 		$dataUser = $this->session->userdata('loginData');
 		$pos = $this->input->post();
 
-		$dataBarang = $this->db->query('select * from tbl_menu p 
-										inner join tbl_bahan_menu bp on p.menu_id = bp.id_menu')->result();
+		$dataBarang = $this->db->query('select * from tbl_menu p ')->result();
 		$dataBarangs= [];
 		foreach ($dataBarang as $key => $value) {
 			$dataBarangs[$value->menu_id] = [];
@@ -531,15 +537,8 @@ class Pos extends CI_Controller
 
 			$dataPilihBarang[] = $value['menu_id'];
 
-			if (!empty($dataBarangs[$value['menu_id']])) {
-				foreach ($dataBarangs[$value['menu_id']] as $keys => $values) {
-					$dataPemakaianStok[] = array('stok_bahan' => 0-intval($values->jumlah_pemakaian),
-													'id_bahan' => $values->id_bahan);
-				}
-			}
 		}
 		$this->db->insert_batch('tbl_detail_transaksi',$dataPembelian);
-		$this->db->insert_batch('tbl_stok_bahan',$dataPemakaianStok);
 
 		if($insert){
 			$this->m_umum->generatePesan("Berhasil transaksi","berhasil");

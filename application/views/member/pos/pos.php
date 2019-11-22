@@ -42,20 +42,20 @@
                 <div class="alert alert-success">
                     <h5>Produk Rekomendasi : 
                         <span ng-if="dataApriori.length == 0 || dataApriori.dataConfident.length == 0">tidak ada rekomendasi</span>
-                        <span ng-repeat="data in dataApriori.dataConfident">
-                            <span ng-repeat="datas in data.isi">
-                                <!-- {{($index == 0?'membeli ':' ')}} -->
-                                {{($index != 0?dataApriori.tabular.tabular_name[datas]:'')}}
-                                <!-- {{dataApriori.tabular.tabular_name[datas]}} -->
-                                <!-- {{($index == 0?' kemungkinan membeli ':'')}} -->
-                            </span>, 
-                        </span>
-                        <!-- <span ng-repeat="data in dataApriori.dataHasil3Confiden">
-                            <span ng-repeat="datas in data.isi">
-                                {{($index == 0?'membeli ':'')}}{{($index == 2?' atau ':'')}}{{dataApriori.tabular.tabular_name[datas]}}{{($index == 0?' kemungkinan membeli ':'')}}
-                            </span>,
-                            <br>
-                        </span> -->
+                        <table ng-if="dataApriori.length != 0 && dataApriori.dataConfident.length != 0">
+                            <tr>
+                                <td>Rekomendasi</td>
+                                <td>Persentase</td>
+                            </tr>
+                            <tr ng-repeat="data in dataApriori.dataConfident">
+                                <td>
+                                    <span ng-repeat="datas in data.isi">
+                                        {{($index != 0?dataApriori.tabular.tabular_name[datas]:'')}}
+                                    </span>
+                                </td>
+                                <td>{{data.nilai*100|number:0}}</td>
+                            </tr>
+                        </table>
                     </h5>
                     <a ng-if="dataApriori.length != 0" href="<?= base_url('admin/pos/downLoadExcel/') ?>{{data_idBarang}}">Perhitungan Download Disini</a>
                 </div>
@@ -74,9 +74,9 @@
                     </tr>
                     <tr ng-repeat="data in pos.list_pos">
                         <th>{{$index+1}}</th>
-                        <th>{{data.produk_code}}<input type="text" style="display: none;" name="barang_keluar[{{$index}}][produk_id]" ng-model="data.produk_id"></th>
-                        <th>{{data.produk_name}}</th>
-                        <th>{{data.produk_harga}}</th>
+                        <th>{{data.menu_code}}<input type="text" style="display: none;" name="barang_keluar[{{$index}}][menu_code]" ng-model="data.menu_code"></th>
+                        <th>{{data.menu_name}}</th>
+                        <th>{{data.menu_harga}}</th>
                         <th><input type="number" style="width: 100%;" name="barang_keluar[{{$index}}][jumlah]" ng-model="data.qty" ng-change="hitungJumlah()"></th>
                         <th><button class="btn btn-danger" ng-click="removePos($index)">x</button></th>
                     </tr>
@@ -87,9 +87,9 @@
                 <div class="row" style="max-height: 500px;overflow-y: scroll;">
                     <div class="col-md-4" ng-repeat="data in data_barang" ng-click="addCart(data)">
                         <div class="border" style="text-align: center;border: 1px solid #e6e6e6;border-radius: 10px;margin-bottom: 10px;padding-top: 5px;background-color: white;">
-                            <img src="<?= $base_foto ?>{{data.produk_gambar}}" style="height: 100px;">
-                            <p style="margin: 0;text-align: center;">{{data.produk_name}}</p>
-                            <p style="margin: 0;text-align: center;">Harga : Rp.{{data.produk_harga|number:0}}</p>
+                            <img src="<?= $base_foto ?>{{data.menu_gambar}}" style="height: 100px;">
+                            <p style="margin: 0;text-align: center;">{{data.menu_name}}</p>
+                            <p style="margin: 0;text-align: center;">Harga : Rp.{{data.menu_harga|number:0}}</p>
                         </div>
                     </div>
                 </div>

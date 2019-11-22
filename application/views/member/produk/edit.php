@@ -80,58 +80,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <?php
-                                                    $sql = $this->db->query("select * from tbl_bahan_produk where id_produk = '".$detailData->produk_id."'")->result();
-                                                    ?>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Bahan</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" >
-                                                                <table class="table table-striped" >
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Nama Bahan</th>
-                                                                            <th>Jumlah Yang digunakan</th>
-                                                                            <th>Opsi Form</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                 
-                                                                    <tbody id="form-body">
-                                                                        <?php foreach ($sql as $key => $Bvalue){?>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <select name="produk_bahan_edit[<?= $key ?>][id_bahan]" class="form-control">
-                                                                                    <?php foreach ($listBahan as $value) {?>
-                                                                                        <option value="<?= $value->bahan_id?>" <?php if ($value->bahan_id == $Bvalue->id_bahan){echo "selected";}?>> <?= $value->bahan_name?></option>
-                                                                                    <?php }?>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="hidden" name="produk_bahan_edit[<?= $key ?>][id_bahan_produk]" value="<?= $Bvalue->bahan_produk_id?>">
-                                                                                <input type="text" class="form-control" name="produk_bahan_edit[<?= $key ?>][jumlah_digunakan]" placeholder="0" value="<?= $Bvalue->jumlah_pemakaian?>">
-                                                                            </td>
-                                                                            <td>
-                                                                               <a href="<?= base_url('admin/produk/deleteBahan/'.$Bvalue->bahan_produk_id.'/'.$this->uri->segment(4))?>"><button type="button" class="btn btn-danger" onclick="del_form(this)">Hapus</button></a>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <?php }?>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro"></label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="form-body">
-                                                                <button type="button" onclick="add_form()" class="btn btn-danger">Tambah Bahan</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                     <div class="form-group-inner">
                                                         <div class="login-btn-inner">
                                                             <div class="row">

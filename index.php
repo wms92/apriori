@@ -1,4 +1,5 @@
 <?php
+ini_set('max_execution_time', 0);
 function debugCode($r=array(),$f=TRUE){
   echo "<pre>";
   print_r($r);

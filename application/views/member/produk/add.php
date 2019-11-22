@@ -81,52 +81,6 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Bahan</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" >
-                                                                <table class="table table-striped" >
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Nama Bahan</th>
-                                                                            <th>Jumlah Yang digunakan</th>
-                                                                            <th>Opsi Form</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                 
-                                                                    <tbody id="form-body">
-                                                                        <tr>
-                                                                            <td>
-                                                                                <select name="produk_bahan[0][id_bahan]" class="form-control">
-                                                                                    <?php foreach ($listBahan as $value) {?>
-                                                                                        <option value="<?= $value->bahan_id?>"> <?= $value->bahan_name?></option>
-                                                                                    <?php }?>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" name="produk_bahan[0][jumlah_digunakan]" placeholder="10">
-                                                                            </td>
-                                                                            <td>
-                                                                               
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro"></label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="form-body">
-                                                                <button type="button" onclick="add_form()" class="btn btn-danger">Tambah Bahan</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
                                                         <div class="login-btn-inner">
                                                             <div class="row">
                                                                 <div class="col-lg-3"></div>

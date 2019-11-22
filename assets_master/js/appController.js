@@ -7,7 +7,7 @@ app.controller('myCtrl', function($scope,$timeout,$http) {
   $scope.data_idBarang = '';
   $scope.addCart = function(barang){
 
-      let index = $scope.pos.list_pos.findIndex( record => record.produk_id === barang.produk_id );
+      let index = $scope.pos.list_pos.findIndex( record => record.menu_code === barang.menu_code );
       if (index == -1) {
         var data = angular.copy(barang);
         data.qty = 1;
@@ -32,7 +32,7 @@ app.controller('myCtrl', function($scope,$timeout,$http) {
             data_id+='-';
         }
         console.log(v);
-        data_id+=v.produk_id;
+        data_id+=v.menu_code;
     })
     $scope.data_idBarang = data_id;
     // console.log(data_id);

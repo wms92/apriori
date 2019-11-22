@@ -35,7 +35,7 @@
                                         </thead>
                                         <tbody>
                                             <?php 
-                                            $sql = $this->db->query("select * from  tbl_detail_transaksi as tdt INNER JOIN tbl_menu  as  tp ON tp.menu_id = tdt.id_menu  where tdt.id_transaksi = '".$detailData->transaksi_id."'")->result();
+                                            $sql = $this->db->query("select * from  tbl_detail_transaksi as tdt INNER JOIN tbl_menu  as  tm ON tm.menu_code = tdt.id_menu_code  where tdt.id_transaksi_code = '".$detailData->transaksi_no."'")->result();
                                             $no = 0;
                                             foreach ($sql  as $key => $value) {
                                             $no++

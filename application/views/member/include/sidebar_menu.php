@@ -14,10 +14,10 @@
                 <li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="fa big-icon fa-cube icon-wrap"></i> <span class="mini-click-non">Master</span></a>
                     <ul class="submenu-angle" aria-expanded="false">
-                        <li>
+                        <li style="display: none">
                         	<a title="Inbox" href="<?= base_url('admin/bahan');?>"><i class="fa fa-bars sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Bahan</span></a>
                        	</li>
-                        <li>
+                        <li style="display: none">
                         	<a title="View Mail" href="<?= base_url('admin/stok_bahan');?>"><i class="fa fa-television sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Stok Bahan</span></a>
                         </li>
                         <li>
@@ -44,10 +44,10 @@
                 <li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="fa big-icon fa-cube icon-wrap"></i> <span class="mini-click-non">Master</span></a>
                     <ul class="submenu-angle" aria-expanded="false">
-                        <li>
+                        <li style="display: none;">
                             <a title="Inbox" href="<?= base_url('admin/bahan');?>"><i class="fa fa-bars sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Bahan</span></a>
                         </li>
-                        <li>
+                        <li style="display: none;">
                             <a title="View Mail" href="<?= base_url('admin/stok_bahan');?>"><i class="fa fa-television sub-icon-mg" aria-hidden="true"></i> <span class="mini-sub-pro">Stok Bahan</span></a>
                         </li>
                         <li>
