@@ -187,10 +187,19 @@ class Menu extends CI_Controller {
 		}
 	}
 
+	public function updateTanggal()
+	{
+		$tanggalAwal = date('2019-08-01');
+		$tanggalMax = date('Y-m-t',strtotime($tanggalAwal));
+		$dataTransaksi = $this->db->query("select * from tbl_transaksi where transaksi_tgl >= '".$tanggalAwal."' and transaksi_tgl <= '".$tanggalMax."'")->result();
+		foreach ($dataTransaksi as $key => $value) {
+			$this->db->update('tbl_transaksi',['transaksi_tgl'=>str_replace('2019', '2018', $value->transaksi_tgl)],['transaksi_id'=>$value->transaksi_id]);
+		}
+	}
 
 	public function generateExcel(){
 		$this->load->library('PHPExcel.php');
-		$tmpfname = FCPATH.'uploads/resto_mei.xls';
+		$tmpfname = FCPATH.'uploads/Resto Sep 2018.xls';
 		// $tmpfname = $_FILES['file']['tmp_name'];
 		$excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);
 		$excelObj = $excelReader->load($tmpfname);
@@ -229,8 +238,8 @@ class Menu extends CI_Controller {
 				}
 			}
 		}
-		$start = strtotime("1 May 2019");
-		$end = strtotime("31 May 2019");
+		$start = strtotime("1 September 2018");
+		$end = strtotime("30 September 2018");
 		foreach ($dataBaru as $key => $value) {
 			$timestamp = mt_rand($start, $end);
 			$this->db->insert('tbl_transaksi',['transaksi_no'=>$key,'transaksi_tgl'=>date("Y-m-d", $timestamp)]);

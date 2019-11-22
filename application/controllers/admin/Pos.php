@@ -42,9 +42,9 @@ class Pos extends CI_Controller
 		// Item Set bulan
 		$tanggal = array();
 		$dataBulan = array();
-		$bulanNya = ['02','06','05'];
+		$bulanNya = ['2018-01','2018-02','2018-05','2018-07','2018-08','2018-09','2018-10','2018-11','2018-12','2019-02','2019-05','2019-06'];
 		for($i=0;$i<count($bulanNya);$i++) {
-			$tanggalAwal = date('Y-'.$bulanNya[$i].'-01');
+			$tanggalAwal = date($bulanNya[$i].'-01');
 			$tanggalMax = date('Y-m-t',strtotime($tanggalAwal));
 			//contoh jika sekarang awalnya tanggal 01-08-2019 maka maxnya 01-07-2019
 			//kalau sudah masuk looping ke dua jadi tanggal 01-07-2019 maka maxnya 01-06-2019 
@@ -511,35 +511,36 @@ class Pos extends CI_Controller
 		$dataBarang = $this->db->query('select * from tbl_menu p ')->result();
 		$dataBarangs= [];
 		foreach ($dataBarang as $key => $value) {
-			$dataBarangs[$value->menu_id] = [];
-			$dataBarangs[$value->menu_id][] = $value;
+			$dataBarangs[$value->menu_code] = [];
+			$dataBarangs[$value->menu_code][] = $value;
 		}
 
 		$dataArray = array(
 			'transaksi_no' => $this->getNoOrder(),
 			'transaksi_tgl' => date('Y-m-d'),
 			'id_user' => $dataUser['UserID'],
-		);	
+		);
 
 		$insert = $this->db->insert("tbl_transaksi" , $dataArray);
 		$dataPembelian = array();
 		$dataPemakaianStok = array();
 		$id_insert = $this->db->insert_id();
 		$jumlahBarang = rand(1,5);
-		$dataPilihBarang = [];
+		// $dataPilihBarang = [];
 		foreach ($pos['barang_keluar'] as $key => $value) {
-			$dataPembelian[] = array('id_transaksi' => $id_insert,
-											'id_menu' => $value['menu_id'],
+			$dataPembelian[] = array('id_transaksi_code' => $dataArray['transaksi_no'],
+											'id_menu_code' => $value['menu_code'],
 											'transaksi_qty'=>$value['jumlah']);
 			$this->db->set('menu_stock', 'menu_stock-'.$value['jumlah'], FALSE);
-			$this->db->where('menu_id', $value['menu_id']);
+			$this->db->where('menu_code', $value['menu_code']);
 			$this->db->update('tbl_menu');
 
-			$dataPilihBarang[] = $value['menu_id'];
+			// $dataPilihBarang[] = $value['menu_id'];
 
 		}
 		$this->db->insert_batch('tbl_detail_transaksi',$dataPembelian);
 
+		die;
 		if($insert){
 			$this->m_umum->generatePesan("Berhasil transaksi","berhasil");
 			redirect('admin/pos/');
