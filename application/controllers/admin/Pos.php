@@ -42,6 +42,7 @@ class Pos extends CI_Controller
 		// Item Set bulan
 		$tanggal = array();
 		$dataBulan = array();
+		// $bulanNya = ['2019-02','2019-05','2019-06'];
 		$bulanNya = ['2018-01','2018-02','2018-05','2018-07','2018-08','2018-09','2018-10','2018-11','2018-12','2019-02','2019-05','2019-06'];
 		for($i=0;$i<count($bulanNya);$i++) {
 			$tanggalAwal = date($bulanNya[$i].'-01');
@@ -55,22 +56,23 @@ class Pos extends CI_Controller
 			$selectTransaksi = $this->db->query("select t.transaksi_no from tbl_detail_transaksi dt
 					inner join tbl_transaksi t on t.transaksi_no = dt.id_transaksi_code
 					where t.transaksi_tgl >= '".$tanggalAwal."' and t.transaksi_tgl <= '".$tanggalMax."' and dt.id_menu_code in ('".$id_barang."') limit 10")->result();
+			$no_menu = [];
+			$data = [];
 			foreach ($selectTransaksi as $key => $value) {
-				$pilihTransaksi[]=$value->transaksi_no;
+				$this->db->select('p.menu_code,p.menu_name');
+				$this->db->from('tbl_detail_transaksi dt');
+				$this->db->join('tbl_transaksi t','t.transaksi_no = dt.id_transaksi_code');
+				$this->db->join('tbl_menu p','p.menu_code = dt.id_menu_code');
+				$this->db->where('t.transaksi_no',$value->transaksi_no);
+				if (count($no_menu)>0) {
+					$this->db->where_not_in('p.menu_code', $no_menu);
+				}
+				$datanya = $this->db->get()->result_array();
+				foreach ($datanya as $keys => $values) {
+					$no_menu[] = $values['menu_code'];
+				}
+				$data = array_merge($data,$datanya);
 			}
-
-			//ini mengambil semua kode produk yang dipilih di transaksi
-			$pilihTransaksi = implode("','", $pilihTransaksi);
-			$data = $this->db->query("SELECT p.menu_code,p.menu_name
-					FROM tbl_detail_transaksi dt
-					inner join tbl_transaksi t on t.transaksi_no = dt.id_transaksi_code
-					inner join tbl_menu p on p.menu_code = dt.id_menu_code
-					where t.transaksi_no in ('".$pilihTransaksi."')
-					group by menu_id")->result_array();
-			// if ($i == 12) {
-			// 	echo $tanggalAwal.''.$tanggalMax;
-			// 	die;
-			// }
 			$dataBulan['bulan '.$i] = $data;
 		}
 
@@ -125,7 +127,7 @@ class Pos extends CI_Controller
 
 		// ini penyocokan data item set 2
 		$dataAll['dataSupport'] = $itemSetSupport;
-
+		$id_barang = explode('","', $id_barang);
 		$itemSet2 = $dataAll['dataSupport'];
 		$itemSet2_new = $dataAll['dataSupport'];
 		$itemSetPasangan = [];
@@ -185,7 +187,7 @@ class Pos extends CI_Controller
 			}
 		}
 
-		$minimalConfidend = 0.66;
+		$minimalConfidend = 0.40;
 		$itemConfidentNew = $dataAll['nilaiConfident'];
 		foreach ($itemConfidentNew as $key => $value) {
 			// perhitungan nilai itemset di bawah 60% atau 0.6
@@ -219,11 +221,7 @@ class Pos extends CI_Controller
 		}
 
 		usort($itemConfidentNew, "cmp");
-		// $dataAll['dataAPP'] = $itemConfidentNew;
-		// if ($itemTerbanyak['index'] == -1) {
-		// 	$dataAll['dataConfident'] = [];
-		// $dataAll['dataApriori'] = [];
-		// }else{
+
 		$temConfiden = [];
 		$no = 0;
 		foreach ($itemConfidentNew as $key => $value) {
@@ -232,68 +230,8 @@ class Pos extends CI_Controller
 			}
 			$no ++;
 		}
+
 		$dataAll['dataConfident'] = $temConfiden;
-			// $dataAll['dataApriori'] = $itemConfidentNew[$itemTerbanyak['index']];
-		// }
-
-		// $itemCariSet3 = [];
-		// foreach ($dataSelectCodeBarang as $key => $value) {
-		// 	$itemCariSet3[] = array('code' => $value, 'pasangan'=>[]);
-		// }
-
-		// foreach ($dataAll['dataAPP'] as $key => $value) {
-		// 	$keynya1 = array_search($value['isi'][0], array_column($itemCariSet3, 'code'));
-		// 	$keynya2 = array_search($value['isi'][1], array_column($itemCariSet3, 'code'));
-		// 	if ($keynya2 !== false) {
-		// 		// $keynya2 = $dataAPP['dataAPP'][$keynya1]['code'];
-		// 		$itemCariSet3[$keynya2]['pasangan'][] = $value['isi'][0];
-		// 	}
-
-		// 	if ($keynya1 !== false) {
-		// 		// $keynya1 = $dataAPP['dataAPP'][$keynya1]['code'];
-		// 		$itemCariSet3[$keynya1]['pasangan'][] = $value['isi'][1];
-		// 	}
-		// }
-
-		// $dataAll['dataCari3Set'] = $itemCariSet3;
-
-		// $data3Set = [];
-		// foreach ($itemCariSet3 as $key => $value) {
-		// 	foreach ($value['pasangan'] as $keys => $values) {
-		// 		if (!empty($value['pasangan'][$keys+1])) {
-		// 			$data3Set[] = array('nilai' => 0, 'isi'=>[$value['code'],$values,$value['pasangan'][$keys+1]]);
-		// 		}
-		// 	}
-		// }
-
-
-		// foreach ($dataDummyBulan as $key => $value) {
-		// 	foreach ($data3Set as $keyt => $valuet) {
-		// 		$pasangan = 0;
-		// 		foreach ($valuet['isi'] as $keyts => $valuets) {
-		// 			if (!empty($value[$valuets])) {
-		// 				$pasangan +=1;
-		// 			}
-		// 		}
-		// 		if ($pasangan == 3) {
-		// 			$data3Set[$keyt]['nilai'] +=1;
-		// 		}
-		// 	}
-		// }
-
-		// $dataAll['data3Set'] = $data3Set;
-		// $data3setConfiden = [];
-		// foreach ($data3Set as $key => $value) {
-		// 	$data3setConfiden[] = array('nilai' => $value['nilai']/$dataTotalBarang[$value['isi'][0]], 'isi'=>$value['isi']);
-		// }
-		// $dataAll['data3Confiden'] = $data3setConfiden;
-
-		// $dataAll['dataHasil3Confiden'] = $dataAll['data3Confiden'];
-		// foreach ($dataAll['dataHasil3Confiden'] as $key => $value) {
-		// 	if ($value['nilai']<0.3) {
-		// 		unset($dataAll['dataHasil3Confiden'][$key]);
-		// 	}
-		// }
 
 		if ($is_api == "api") {
 			echo json_encode($dataAll);
@@ -321,6 +259,7 @@ class Pos extends CI_Controller
 		$dataAll = $this->getApriori($id_barang,'web');
 		$dataAll = json_encode($dataAll);
 		$dataAll = json_decode($dataAll);
+		$bulan = count($dataAll->itemset);
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
 		$no =3;
@@ -367,7 +306,7 @@ class Pos extends CI_Controller
 		$no++;
 		foreach ($dataAll->datanilaiSupport as $key => $value) {
 			$sheet->setCellValue('A'.$no, $key);
-			$sheet->setCellValue('B'.$no, ($value*12).'%');
+			$sheet->setCellValue('B'.$no, ($value*$bulan).'%');
 			$no++;
 		}
 
@@ -383,12 +322,12 @@ class Pos extends CI_Controller
 				$text .= $values;
 			}
 			$sheet->setCellValue('A'.$no, $text);
-			$sheet->setCellValue('B'.$no, ($value->nilai*12).'%');
+			$sheet->setCellValue('B'.$no, ($value->nilai*$bulan).'%');
 			$no++;
 		}
 
 		$no+=2;
-		$sheet->setCellValue('A'.$no, 'Support 2-item Set Min 20%');
+		$sheet->setCellValue('A'.$no, 'Support 2-item Set Min 2 kali muncul');
 		$no++;
 		foreach ($dataAll->dataSupportPasanganNew as $key => $value) {
 			$text = '';
@@ -399,7 +338,7 @@ class Pos extends CI_Controller
 				$text .= $values;
 			}
 			$sheet->setCellValue('A'.$no, $text);
-			$sheet->setCellValue('B'.$no, ($value->nilai*12).'%');
+			$sheet->setCellValue('B'.$no, ($value->nilai*$bulan).'%');
 			$no++;
 		}
 
@@ -422,7 +361,7 @@ class Pos extends CI_Controller
 		}
 
 		$no+=2;
-		$sheet->setCellValue('A'.$no, 'Nilai Confidence Min 66%');
+		$sheet->setCellValue('A'.$no, 'Nilai Confidence Min 40%');
 		$no++;
 		foreach ($dataAll->dataConfident as $key => $value) {
 			$text = '';

@@ -70,8 +70,7 @@
                                                     </div>
                                                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                         <select name="user_status" class="form-control">
-                                                            <option value="1" > Gudang</option>
-                                                            <option value="2" > Kasir</option>
+                                                            <option value="2" > Manager</option>
                                                             <option value="9" > Admin</option>
                                                         </select>
                                                     </div>

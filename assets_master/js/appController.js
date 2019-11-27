@@ -39,6 +39,7 @@ app.controller('myCtrl', function($scope,$timeout,$http) {
     if (data_id == '') {
       $scope.dataApriori = [];
     }else{
+      $scope.dataApriori = [];
       $http({
         method: 'GET',
         url: base_url+'admin/pos/getApriori/'+data_id
@@ -57,7 +58,7 @@ app.controller('myCtrl', function($scope,$timeout,$http) {
       if (v.qty == '' || v.qty < 0) {
         v.qty = 0;
       }
-  		jumlah += (v.qty*v.produk_harga);
+  		jumlah += (v.qty*v.menu_harga);
   	})
   	$scope.pos.harga_total = jumlah;
   }

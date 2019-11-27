@@ -26,6 +26,7 @@
                                                 <th data-field="code" data-editable="true">Nama Lengkap</th>
                                                 <th data-field="name" data-editable="true">Jenis Kelamin</th>
                                                 <th data-field="harga" data-editable="true">Username</th>
+                                                <th data-field="status" data-editable="true">Username</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
@@ -45,6 +46,7 @@
                                                 <td><?= $value->user_name ?></td>
                                                 <td><?= $jk ?></td>
                                                 <td><?= $value->username ?></td>
+                                                <td><?= ($value->user_status=='2'?'Manager':'Admin') ?></td>
                                                 <td class="datatable-ct">
                                                     <a href="<?php echo base_url('admin/pengguna/edit/'.$value->user_id) ?>"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                                     <a href="<?php echo base_url('admin/pengguna/doDelete/'.$value->user_id) ?>"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" onclick="return confirm('Anda yakin ingin menghapus data ini ? ')"></i></button></a>

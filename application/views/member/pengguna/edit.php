@@ -71,8 +71,7 @@
                                                     </div>
                                                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                         <select name="user_status" class="form-control">
-                                                            <option value="1" <?php if ($detailData->user_status == '1'){echo "selected";}?> > Gudang</option>
-                                                            <option value="2" <?php if ($detailData->user_status == '2'){echo "selected";}?> > Kasir</option>
+                                                            <option value="2" <?php if ($detailData->user_status == '2'){echo "selected";}?> > Manager</option>
                                                             <option value="9" <?php if ($detailData->user_status == '9'){echo "selected";}?> > Admin</option>
                                                         </select>
                                                     </div>
