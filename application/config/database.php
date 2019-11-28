@@ -74,10 +74,10 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'aplikasi_agustin',
+	'hostname' => 'aplikasiskripsi.com',
+	'username' => 'aplikasiskripsi',
+	'password' => 'P+E^7)[8M5vc',
+	'database' => 'aplikasiskripsi_agustin_apriori',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
