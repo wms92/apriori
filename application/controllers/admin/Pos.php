@@ -479,7 +479,6 @@ class Pos extends CI_Controller
 		}
 		$this->db->insert_batch('tbl_detail_transaksi',$dataPembelian);
 
-		die;
 		if($insert){
 			$this->m_umum->generatePesan("Berhasil transaksi","berhasil");
 			redirect('admin/pos/');
