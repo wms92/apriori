@@ -26,7 +26,7 @@
                                                 <th data-field="code" data-editable="true">Nama Lengkap</th>
                                                 <th data-field="name" data-editable="true">Jenis Kelamin</th>
                                                 <th data-field="harga" data-editable="true">Username</th>
-                                                <th data-field="status" data-editable="true">Username</th>
+                                                <th data-field="status" data-editable="true">Status</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
