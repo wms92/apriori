@@ -15,21 +15,21 @@
                     if ($userLogin['lvlUser'] == '2'){
                 ?>
                 <li>
-                    <a class="" href="<?= base_url('admin/pos');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">POS</span></a>
+                    <a class="" href="<?= base_url('admin/pos');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">Analisis Penjualan</span></a>
                 </li>
                 <?php } ?>
                     <?php if ($userLogin['lvlUser'] == '9'){ ?>
                     <li>
-                        <a class="" href="<?= base_url('admin/menu');?>" aria-expanded="false"><i class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">Menu</span></a>
+                        <a class="" href="<?= base_url('admin/menu');?>" aria-expanded="false"><i class="fa big-icon fa-list icon-wrap"></i> <span class="mini-click-non">Data Menu</span></a>
                     </li>
                     <li>
-                        <a class="" href="<?= base_url('admin/pengguna/daftar');?>" aria-expanded="false"><i class="fa big-icon fa-user icon-wrap"></i> <span class="mini-click-non">Pengguna</span></a>
+                        <a class="" href="<?= base_url('admin/pengguna/daftar');?>" aria-expanded="false"><i class="fa big-icon fa-user icon-wrap"></i> <span class="mini-click-non">Data Pengguna</span></a>
                     </li>
                     <li>
-                        <a class="" href="<?= base_url('admin/transaksi');?>" aria-expanded="false"><i class="fa big-icon fa-credit-card icon-wrap"></i> <span class="mini-click-non">Transaksi</span></a>
+                        <a class="" href="<?= base_url('admin/transaksi');?>" aria-expanded="false"><i class="fa big-icon fa-credit-card icon-wrap"></i> <span class="mini-click-non">Data Transaksi</span></a>
                     </li>
                     <li>
-                        <a class="" href="<?= base_url('admin/pos');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">POS</span></a>
+                        <a class="" href="<?= base_url('admin/pos');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">Analisis Penjualan</span></a>
                     </li>
                 <?php } ?>
             </ul>
