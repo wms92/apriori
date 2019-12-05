@@ -38,15 +38,31 @@ class Pos extends CI_Controller
 			$dataSelectCodeBarang[] = $value->menu_code;
 		}
 
+		$dataBarangs = $this->db->query('select * from tbl_menu')->result_array();
+		$dataBarang= [];
+		foreach ($dataBarangs as $key => $value) {
+			$dataBarang[$value['menu_code']] = $value;
+		}
+
 
 		// Item Set bulan
 		$tanggal = array();
 		$dataBulan = array();
 		// $bulanNya = ['2019-02','2019-05','2019-06'];
-		$bulanNya = ['2018-01','2018-02','2018-05','2018-07','2018-08','2018-09','2018-10','2018-11','2018-12','2019-02','2019-05','2019-06'];
-		for($i=0;$i<count($bulanNya);$i++) {
-			$tanggalAwal = date($bulanNya[$i].'-01');
-			$tanggalMax = date('Y-m-t',strtotime($tanggalAwal));
+		// $bulanNya = ['2018-01','2018-02','2018-05','2018-07','2018-08','2018-09','2018-10','2018-11','2018-12','2019-02','2019-05','2019-06'];
+		for($i=1;$i<13;$i++) {
+			$dateAwal = mktime(0, 0, 0, date("m")-($i), date("d"), date("Y"));
+			$tanggalAwal = date('Y-m-d',$dateAwal);
+			if ($i == 1) {
+				$tanggalMax = date('Y-m-d');
+			}else{
+				$dateMax = mktime(0, 0, 0, date("m")-(($i-1)), date("d"), date("Y"));
+				$tanggalMax = date('Y-m-d',$dateMax);
+			}
+
+
+			// $tanggalAwal = date($bulanNya[$i].'-01');
+			// $tanggalMax = date('Y-m-t',strtotime($tanggalAwal));
 			//contoh jika sekarang awalnya tanggal 01-08-2019 maka maxnya 01-07-2019
 			//kalau sudah masuk looping ke dua jadi tanggal 01-07-2019 maka maxnya 01-06-2019 
 			
@@ -77,6 +93,8 @@ class Pos extends CI_Controller
 		}
 
 		// jumlah data tabular per item
+		$dataTotalBarang = [];
+		$dataDummyBulan = [];
 		$dataAll['itemset'] = $dataBulan;
 		foreach ($dataBulan as $key => $value) {
 			foreach ($value as $keys => $values) {
@@ -109,6 +127,7 @@ class Pos extends CI_Controller
 		}
 
 		// data support jumlah barang tabular di bagi 12 bulan
+		$dataSupport = [];
 		$dataAll['tabular'] = $dataTabular;
 		foreach ($dataTotalBarang as $key => $value) {
 			$dataSupport[$key] = ($value/count($dataBulan));
@@ -161,8 +180,15 @@ class Pos extends CI_Controller
 		// penyeleksian itemset 2 hanya muncul dibawah 2 , maka di hilangkan
 		$itemSetPasanganNew = $itemSetPasangan;
 		$minimalitemSupport = 2;
+
+		$temConfidenMin = [];
+		$no = 0;
 		foreach ($itemSetPasanganNew as $key => $value) {
 			if ($value['nilai'] < $minimalitemSupport) {
+				if ($no<2) {
+					$temConfidenMin[] = $value;
+					$no++;
+				}
 				unset($itemSetPasanganNew[$key]);
 			}
 		}
@@ -178,7 +204,9 @@ class Pos extends CI_Controller
 		// jika nilai konfident tidak ada yang diatas 20% maka hitungan apriori selesai
 		if(empty($dataAll['nilaiConfident']) || count($dataAll['nilaiConfident']) == 1){
 			$dataAll['dataConfident'] = [];
+			$dataAll['dataConfidentMin'] = $temConfidenMin;
 			$dataAll['dataApriori'] = [];
+			$dataAll['barang'] = $dataBarang;
 			if ($is_api == "api") {
 				echo json_encode($dataAll);
 				return true;
@@ -225,13 +253,15 @@ class Pos extends CI_Controller
 		$temConfiden = [];
 		$no = 0;
 		foreach ($itemConfidentNew as $key => $value) {
-			if ($no < 10) {
+			if ($no < 2) {
 				$temConfiden[] = $value;
+				$no ++;
 			}
-			$no ++;
 		}
 
 		$dataAll['dataConfident'] = $temConfiden;
+		$dataAll['dataConfidentMin'] = $temConfidenMin;
+		$dataAll['barang'] = $dataBarang;
 
 		if ($is_api == "api") {
 			echo json_encode($dataAll);

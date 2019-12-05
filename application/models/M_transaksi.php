@@ -25,11 +25,11 @@ class M_transaksi extends CI_Model {
 		return $result;
 	}
 
-	public function getListTransaksiByDate($start, $end){
+	public function getListTransaksiByDate($start = '', $end = ''){
 		$this->db->select("*");
 		$this->db->from("tbl_transaksi");
-		$this->db->where("transaksi_tgl >=",$start);
-		$this->db->where("transaksi_tgl <=",$end);
+		// $this->db->where("transaksi_tgl >=",$start);
+		// $this->db->where("transaksi_tgl <=",$end);
 		$query  = $this->db->get();
 		$result = $query->result();
 		return $result;
@@ -39,7 +39,7 @@ class M_transaksi extends CI_Model {
 		$this->db->select("*");
 		$this->db->from("tbl_transaksi as tt");
 		$this->db->join("tbl_detail_transaksi as tdt","tdt.id_transaksi = tt.transaksi_id");
-		$this->db->join("tbl_produk as tp","tp.produk_id = tdt.id_produk");
+		$this->db->join("tbl_menu as tp","tp.menu_code = tdt.id_menu_code");
 		$query  = $this->db->get();
 		$result = $query->result();
 		return $result;

@@ -42,20 +42,29 @@
                 <div class="alert alert-success">
                     <h5>Produk Rekomendasi : 
                         <span ng-if="dataApriori.length == 0 || dataApriori.dataConfident.length == 0">tidak ada rekomendasi</span>
-                        <table ng-if="dataApriori.length != 0 && dataApriori.dataConfident.length != 0">
-                            <tr>
-                                <td>Rekomendasi</td>
-                                <td>Persentase</td>
-                            </tr>
-                            <tr ng-repeat="data in dataApriori.dataConfident">
-                                <td>
+                        <div class="row" ng-if="dataApriori.length != 0 && dataApriori.dataConfident.length != 0">
+                            <div class="col-md-4" ng-repeat="data in dataApriori.dataConfident" >
+                                <div class="border" style="text-align: center;border: 1px solid #e6e6e6;border-radius: 10px;margin-bottom: 10px;padding-top: 5px;padding-bottom: 5px;background-color: white;">
+                                    <p style="margin: 0;text-align: center;">
                                     <span ng-repeat="datas in data.isi">
                                         {{($index != 0?dataApriori.tabular.tabular_name[datas]:'')}}
-                                    </span>
-                                </td>
-                                <td>{{data.nilai*100|number:0}}</td>
-                            </tr>
-                        </table>
+                                    </span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </h5>
+                    <h5>Produk Kurang Laku : 
+                        <span ng-if="dataApriori.length == 0 || dataApriori.dataConfidentMin.length == 0">tidak ada produk kurang laku</span>
+                        <div class="row" ng-if="dataApriori.length != 0 && dataApriori.dataConfidentMin.length != 0">
+                            <div class="col-md-4" ng-repeat="data in dataApriori.dataConfidentMin" >
+                                <div class="border" style="text-align: center;border: 1px solid #e6e6e6;border-radius: 10px;margin-bottom: 10px;padding-top: 5px;padding-bottom: 5px;background-color: white;">
+                                    <p style="margin: 0;text-align: center;">
+                                    <span ng-repeat="datas in data.isi">
+                                        {{($index != 0?dataApriori.barang[datas]:'')}}
+                                    </span></p>
+                                </div>
+                            </div>
+                        </div>
                     </h5>
                     <a ng-if="dataApriori.length != 0" href="<?= base_url('admin/pos/downLoadExcel/') ?>{{data_idBarang}}">Perhitungan Download Disini</a>
                 </div>

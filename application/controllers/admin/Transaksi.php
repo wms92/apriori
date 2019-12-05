@@ -16,9 +16,7 @@ class Transaksi extends CI_Controller {
 	public function daftar(){
 		$data['userLogin']  = $this->session->userdata('loginData');
 		$post = $this->input->post();
-
-
-		$data['listData']	= $this->M_transaksi->getListTransaksiByDate($post['start'], $post['end']);
+		$data['listData']	= $this->M_transaksi->getListTransaksiByDate();
 		$data['v_content']  = 'member/transaksi/daftar';
 		$this->load->view('member/layout', $data);
 	}
@@ -100,12 +98,11 @@ class Transaksi extends CI_Controller {
 	public function addAutomatic()
 	{
 		$dataUser = $this->session->userdata('loginData');
-		$dataBarang = $this->db->query('select * from tbl_produk p 
-										inner join tbl_bahan_produk bp on p.produk_id = bp.id_produk')->result();
+		$dataBarang = $this->db->query('select * from tbl_menu')->result();
 		$dataBarangs= [];
 		foreach ($dataBarang as $key => $value) {
-			$dataBarangs[$value->produk_id] = [];
-			$dataBarangs[$value->produk_id][] = $value;
+			// $dataBarangs[$value->menu_id] = [];
+			$dataBarangs[$value->menu_id] = $value;
 		}
 		$tglTransaksi = array(
 								'2018-07-15',
@@ -139,10 +136,15 @@ class Transaksi extends CI_Controller {
 								'2019-09-19',
 								'2019-09-06',
 								'2019-10-19',
-								'2019-10-06');
-
-		for($i=0;$i<200;$i++){
-			$tanggal = $tglTransaksi[rand(0,29)];
+								'2019-10-06',
+								'2019-11-19',
+								'2019-11-06',
+								'2019-12-19',
+								'2019-12-06',
+								'2020-01-19',
+								'2020-01-06');
+		for($i=0;$i<300;$i++){
+			$tanggal = $tglTransaksi[rand(0,37)];
 			$no_transaksi = $this->getNoOrder($tanggal);
 			$dataArray = array(
 				'transaksi_no' => $no_transaksi,
@@ -152,23 +154,16 @@ class Transaksi extends CI_Controller {
 
 			$insert = $this->db->insert("tbl_transaksi" , $dataArray);
 			$dataPembelian = array();
-			$dataPemakaianStok = array();
 			$id_insert = $this->db->insert_id();
 			$jumlahBarang = rand(1,5);
 			for ($j=0;$j<$jumlahBarang;$j++) {
-				$id_barang = rand(1,50);
+				$id_barang = rand(1,305);
 				$dataPembelian[] = array('id_transaksi' => $id_insert,
-												'id_produk' => $id_barang,
+											'id_transaksi_code' => $no_transaksi,
+												'id_menu_code' => $dataBarangs[$id_barang]->menu_code,
 												'transaksi_qty'=>rand(1,3));
-				if (!empty($dataBarangs[$id_barang])) {
-					foreach ($dataBarangs[$id_barang] as $key => $value) {
-						$dataPemakaianStok[] = array('stok_bahan' => 0-intval($value->jumlah_pemakaian),
-														'id_bahan' => $value->id_bahan);
-					}
-				}
 			}
 			$this->db->insert_batch('tbl_detail_transaksi',$dataPembelian);
-			$this->db->insert_batch('tbl_stok_bahan',$dataPemakaianStok);
 		}
 	}
 
@@ -236,7 +231,7 @@ class Transaksi extends CI_Controller {
 	      	$excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $no);
 	      	$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $data->transaksi_no);
 	      	$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $data->transaksi_tgl);
-	      	$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $data->produk_name);
+	      	$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $data->menu_name);
 	      	$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $data->transaksi_qty);
 	      
 	      	// Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
