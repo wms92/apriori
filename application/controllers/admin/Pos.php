@@ -154,7 +154,15 @@ class Pos extends CI_Controller
 			array_shift($itemSet2_new);
 			foreach ($itemSet2_new as $key2 => $value2) {
 				if ($key != $key2) {
-					$itemSetPasangan[] = array('nilai'=>0,'isi'=>array($key,$key2));
+					if (in_array($key,$dataSelectCodeBarang)) {
+						if (in_array($key,$dataSelectCodeBarang)) {
+							$itemSetPasangan[] = array('nilai'=>0,'isi'=>array($key,$key2));
+						}
+					}else{
+						if (in_array($key2,$dataSelectCodeBarang)) {
+							$itemSetPasangan[] = array('nilai'=>0,'isi'=>array($key2,$key));
+						}
+					}
 				}
 			}
 		}
