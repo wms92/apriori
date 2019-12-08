@@ -410,3 +410,6 @@
 [08-Feb-2019 09:03:17 Asia/Jakarta] PHP Fatal error:  Call to undefined function test_input() in /home/kpptech/public_html/operation/eris/toni2/application/controllers/api/Services.php on line 47
 [08-Feb-2019 09:03:44 Asia/Jakarta] PHP Fatal error:  Call to undefined function test_input() in /home/kpptech/public_html/operation/eris/toni2/application/controllers/api/Services.php on line 47
 [08-Feb-2019 09:11:29 Asia/Jakarta] PHP Fatal error:  Call to undefined function valid_email() in /home/kpptech/public_html/operation/eris/toni2/application/controllers/api/Services.php on line 83
+[24-Nov-2019 15:16:01 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 36436456 bytes) in /home/aplikasiskripsi/public_html/demo.dokterskripsi.com/agustin_apriori/system/core/Output.php on line 198
+[24-Nov-2019 15:16:10 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 36436456 bytes) in /home/aplikasiskripsi/public_html/demo.dokterskripsi.com/agustin_apriori/system/core/Output.php on line 198
+[24-Nov-2019 15:16:34 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 33863744 bytes) in /home/aplikasiskripsi/public_html/demo.dokterskripsi.com/agustin_apriori/system/core/Output.php on line 198
