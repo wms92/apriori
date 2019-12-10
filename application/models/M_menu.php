@@ -11,6 +11,7 @@ class M_menu extends CI_Model {
 	public function getListMenu(){
 		$this->db->select("*");
 		$this->db->from("tbl_menu");
+		$this->db->order_by("menu_name","asc");
 		$query  = $this->db->get();
 		$result = $query->result();
 		return $result;

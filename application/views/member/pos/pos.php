@@ -94,9 +94,8 @@
             <div class="col-md-6" style="border: 1px solid #e6e6e6;border-radius: 10px;background-color: white;">
                 <h1 style="text-align: center;">List Barang</h1>
                 <div class="row" style="max-height: 500px;overflow-y: scroll;">
-                    <div class="col-md-4" ng-repeat="data in data_barang" ng-click="addCart(data)">
+                    <div class="col-md-4" ng-repeat="data in data_barang" ng-click="addCart(data)" style="cursor: pointer;">
                         <div class="border" style="text-align: center;border: 1px solid #e6e6e6;border-radius: 10px;margin-bottom: 10px;padding-top: 5px;background-color: white;">
-                            <img src="<?= $base_foto ?>{{data.menu_gambar}}" style="height: 100px;">
                             <p style="margin: 0;text-align: center;">{{data.menu_name}}</p>
                             <p style="margin: 0;text-align: center;">Harga : Rp.{{data.menu_harga|number:0}}</p>
                         </div>

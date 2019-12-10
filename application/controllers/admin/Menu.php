@@ -10,7 +10,6 @@ class Menu extends CI_Controller {
 	
 	public function add(){
 		$data['userLogin']  = $this->session->userdata('loginData');
-		$data['listBahan'] = $this->M_bahan->getListBahan();
 		$data['kode_menu'] = $this->M_menu->kodeTransaksi();
 		$data['v_content']  = 'member/menu/add';
 		$this->load->view('member/layout', $data);
