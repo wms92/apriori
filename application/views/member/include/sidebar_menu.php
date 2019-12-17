@@ -29,7 +29,7 @@
                         <a class="" href="<?= base_url('admin/transaksi/daftar');?>" aria-expanded="false"><i class="fa big-icon fa-credit-card icon-wrap"></i> <span class="mini-click-non">Data Transaksi</span></a>
                     </li>
                     <li>
-                        <a class="" href="<?= base_url('admin/pos');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">Analisis Penjualan</span></a>
+                        <a class="" href="<?= base_url('admin/analisis');?>" aria-expanded="false"><i class="fa big-icon fa-windows icon-wrap"></i> <span class="mini-click-non">Analisis Penjualan</span></a>
                     </li>
                 <?php } ?>
             </ul>

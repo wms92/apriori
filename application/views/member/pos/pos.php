@@ -38,7 +38,7 @@
                     <strong>{{pos.alert}}</strong>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="display: none;">
                 <div class="alert alert-success">
                     <h5>Produk Rekomendasi : 
                         <span ng-if="dataApriori.length == 0 || dataApriori.dataConfident.length == 0">tidak ada rekomendasi</span>
