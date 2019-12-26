@@ -25,6 +25,14 @@ class Pos extends CI_Controller
 		$this->load->view("member/layout", $data);
 	}
 
+	public function v2() {
+		$data['userLogin'] = $this->session->userdata('loginData');
+		$data['barang_data'] = $this->m_menu->getlistMenu();
+		$data['no_transaksi'] = $this->getNoOrder();
+		$data['v_content'] = "member/pos/posv2";
+		$this->load->view("member/layout", $data);
+	}
+
 	public function getApriori($id_barang,$is_api = "api"){
 		$dataAll = array();
 		if ($is_api == 'api') {
@@ -479,6 +487,45 @@ class Pos extends CI_Controller
         $number_increment = sprintf('%03d',$num);
         $number = date('Ymd').$number_increment;
         return $number;
+	}
+
+	public function posTransaksiv2() {
+		$dataUser = $this->session->userdata('loginData');
+		$pos = $this->input->post();
+
+		$dataBarang = $this->db->query('select * from tbl_menu p ')->result();
+		$dataBarangs= [];
+		foreach ($dataBarang as $key => $value) {
+			$dataBarangs[$value->menu_code] = [];
+			$dataBarangs[$value->menu_code][] = $value;
+		}
+
+		$dataArray = array(
+			'transaksi_no' => $pos['no_transaksi'],
+			'transaksi_tgl' => $pos['transaction_date'],
+			'id_user' => $dataUser['UserID'],
+		);
+
+		$insert = $this->db->insert("tbl_transaksi" , $dataArray);
+		$dataPembelian = array();
+		$dataPemakaianStok = array();
+		$id_insert = $this->db->insert_id();
+		$jumlahBarang = rand(1,5);
+
+		foreach($pos['barang_keluar'] as $k => $val) {
+			$dataPembelian[] = array('id_transaksi_code' => $dataArray['transaksi_no'],
+											'id_menu_code' => $val['menu_kode'],
+											'transaksi_qty'=>$val['item_qty']);
+		}
+		$this->db->insert_batch('tbl_detail_transaksi',$dataPembelian);
+
+		if($insert){
+			$this->m_umum->generatePesan("Berhasil transaksi","berhasil");
+			redirect('admin/pos/v2');
+		}else{
+			$this->m_umum->generatePesan("Gagal transaksi","gagal");
+			redirect('admin/pos/v2');
+		}
 	}
 
 	public function posTransaksi(){

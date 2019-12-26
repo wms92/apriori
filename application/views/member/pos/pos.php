@@ -7,11 +7,7 @@
     <!-- ============================================================== -->
     <div class="row page-titles">
         <div class="col-md-5 col-8 align-self-center">
-            <h3 class="text-themecolor">Dashboard</h3>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
+            <h3 class="text-themecolor">Tambah Transaksi</h3>
         </div>
     </div>
     <!-- ============================================================== -->
@@ -27,7 +23,7 @@
     </div>
     <form action="<?php echo site_url('admin/pos/posTransaksi'); ?>" class="form-inline" method="post">
     <div style="margin-bottom: 10px" ng-app="myApp" ng-controller="myCtrl">
-        <div class="row">
+        <div class="row" style="display: none;">
             <div class="col-md-6">
                 <div class="alert alert-success">
                     <h5>No Transaksi : <?= $no_transaksi ?></h5>
@@ -77,7 +73,6 @@
                         <th>No</th>
                         <th>Kode Menu</th>
                         <th>Nama Menu</th>
-                        <th>Harga</th>
                         <th>Jumlah</th>
                         <th>Action</th>
                     </tr>
@@ -85,7 +80,6 @@
                         <th>{{$index+1}}</th>
                         <th>{{data.menu_code}}<input type="text" style="display: none;" name="barang_keluar[{{$index}}][menu_code]" ng-model="data.menu_code"></th>
                         <th>{{data.menu_name}}</th>
-                        <th>{{data.menu_harga}}</th>
                         <th><input type="number" style="width: 100%;" name="barang_keluar[{{$index}}][jumlah]" ng-model="data.qty" ng-change="hitungJumlah()"></th>
                         <th><button class="btn btn-danger" ng-click="removePos($index)">x</button></th>
                     </tr>
@@ -97,14 +91,20 @@
                     <div class="col-md-4" ng-repeat="data in data_barang" ng-click="addCart(data)" style="cursor: pointer;">
                         <div class="border" style="text-align: center;border: 1px solid #e6e6e6;border-radius: 10px;margin-bottom: 10px;padding-top: 5px;background-color: white;">
                             <p style="margin: 0;text-align: center;">{{data.menu_name}}</p>
-                            <p style="margin: 0;text-align: center;">Harga : Rp.{{data.menu_harga|number:0}}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="form-group review-pro-edt">
-            <button class="btn btn-primary waves-effect waves-light pull-right" style="margin-top: 10px;">Bayar</button>    
+        <div class="form-group-inner">
+            <div class="login-btn-inner">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-primary" style="margin-top: 10px;">Tambah</button>    
+                        <button class="btn btn-warning" style="margin-top: 10px;">Kembali</button>
+                    </div>            
+                </div>
+            </div>
         </div>
     </div>
     </form>

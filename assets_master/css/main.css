@@ -278,3 +278,7 @@ textarea {
         page-break-after: avoid;
     }
 }
+
+.item_container {
+    margin-left: -28px;
+}

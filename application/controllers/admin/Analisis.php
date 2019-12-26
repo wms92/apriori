@@ -21,6 +21,18 @@ class Analisis extends CI_Controller {
         $endDate = $get['end_date'];
         $minSupport = is_numeric($get['support']) ? $get['support'] : 20;
 
+        // get all menu
+        $menu = $this->m_menu->getListMenu();
+        $menuByCode = [];
+        foreach($menu as $k => $val) {
+            $key = $val->menu_code;
+            $menuName = $val->menu_name;
+            $menuByCode[$key] = $menuName;
+        }
+
+        // relase memory
+        $menu = [];
+
         // load apriori library
         $param = ['min_support' => $minSupport];
 
@@ -53,8 +65,12 @@ class Analisis extends CI_Controller {
             $lasInd = count($valExtract) - 1;
             $lastVal = $valExtract[$lasInd];
             $valExtract = array_slice($valExtract, 0, -1);
+            $menuNameByTrans = [];
+            foreach($valExtract as $menuCode) {
+                $menuNameByTrans[] = $menuByCode[$menuCode];
+            }
 
-            $resTemp = sprintf("Jika pelanggan membeli %s maka pelanggan akan membeli %s", implode(",", $valExtract), $lastVal);
+            $resTemp = sprintf("Jika pelanggan membeli %s maka pelanggan akan membeli %s", implode(",", $menuNameByTrans), $menuByCode[$lastVal]);
             $res[] = $resTemp;
         }
         

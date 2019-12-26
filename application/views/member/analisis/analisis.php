@@ -72,7 +72,7 @@
                                                         <div class="col-lg-3"></div>
                                                         <div class="col-lg-9">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <button class="btn btn-sm btn-primary login-submit-cs" type="submit" onclick="handlingProcessAnalysis();">Start</button>
+                                                                <button id="start-btn" class="btn btn-sm btn-primary login-submit-cs" type="submit" onclick="handlingProcessAnalysis();">Start</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -102,12 +102,24 @@
     </div>
 </div>
 
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalLoading">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      Loading . . . <br>
+      Please Wait a Minute
+    </div>
+  </div>
+</div>
+
 
 
 <script>
+
     function handlingProcessAnalysis() {
         // clear data in table
         $('#result-container').html("")
+        $("#start-btn").attr("disabled", true)
+        $('#modalLoading').modal({show:true,focus: true})
 
         var data = $('#analisis_form').serialize()
         var type_analysis = $('#analisis_type').val()
@@ -146,6 +158,8 @@
                     tableContainer.append(tr)
                 }
                 
+                $("#start-btn").attr("disabled", false)
+                $('#modalLoading').modal('hide')
             }
         })
     }
@@ -176,6 +190,9 @@
                     tr.appendChild(td)
                     tableContainer.append(tr)
                 }
+
+                $("#start-btn").attr("disabled", false)
+                $('#modalLoading').modal('hide')
                 
             }
         })   
