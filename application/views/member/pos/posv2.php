@@ -46,8 +46,8 @@
                                                             </div>
                                                             <div id="item_transact_container" class="col-lg-9 col-md-9 col-sm-9 col-xs-12 item_container">
                                                                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="item_container0">
-                                                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-9">
-                                                                        <select name="barang_keluar[0][menu_kode]">
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                                        <select class="col-lg-12" style="margin-left:-16px;"name="barang_keluar[0][menu_kode]">
                                                                             <?php foreach($barang_data as $k => $val):?>
                                                                                 <option value="<?= $val->menu_code?>"><?= $val->menu_name?></option>
                                                                             <?php endforeach;?>
@@ -70,7 +70,7 @@
                                                                 <div class="col-lg-3"></div>
                                                                 <div class="col-lg-9">
                                                                     <div class="login-horizental cancel-wp pull-left">
-                                                                        <a href="<?= base_url('admin/produk/');?>" class="btn btn-default"> Kembali</a>
+                                                                        <a href="<?= base_url('admin/transaksi/daftar');?>" class="btn btn-default"> Kembali</a>
                                                                         <button class="btn btn-sm btn-primary login-submit-cs" type="submit">Simpan</button>
                                                                     </div>
                                                                 </div>
@@ -107,10 +107,12 @@
         
 
         var divContainMenu = document.createElement("div")
-        divContainMenu.className = "col-lg-3 col-md-3 col-sm-3 col-xs-9"
+        divContainMenu.className = "col-lg-4 col-md-4 col-sm-4 col-xs-12"
         var selectMenu = document.createElement("select")
         selectMenu.name = "barang_keluar["+indexItem+"][menu_kode]"
         selectMenu.innerHTML = opt_menu
+        selectMenu.className = "col-lg-12"
+        selectMenu.style.marginLeft = "-16px";
         divContainMenu.append(selectMenu)
 
         var divContainQty = document.createElement("div")

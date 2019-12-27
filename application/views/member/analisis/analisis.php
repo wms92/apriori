@@ -46,22 +46,33 @@
                                                         <label class="login2pull-right pull-right-pro">Support</label>
                                                     </div>
 
-                                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                         <input type="number" min="0" max="100" name="support" id="support" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-8">
+                                                        <label class="login2pull-right pull-right-pro">Conffidence</label>
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="number" min="0" max="100" name="confidence" id="confidence" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group-inner">
                                                 <div class="row">
                                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                        <label class="login2pull-right pull-right-pro">Analysis Type</label>
+                                                        <label class="login2pull-right pull-right-pro">Analysis</label>
                                                     </div>
 
-                                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
-                                                        <select name="analisis_type" id="analisis_type">
-                                                            <option value="terlaris">Terlaris</option>
-                                                            <option value="tak_laku">Tidak Laku</option>
-                                                        </select>
+                                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12" style="margin-left: -12px;">
+                                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                            <a class="btn btn-primary btn-sm disabled" id="btn-laku" onclick="handlingBtnActive(this.id)">Laku</a>
+                                                        </div>
+                                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                            <a class="btn btn-primary btn-sm" id="btn-notsell" onclick="handlingBtnActive(this.id)">Tidak Laku</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -114,16 +125,24 @@
 
 
 <script>
+    var btnActiveAnalisis = "btn-laku";
 
+    function handlingBtnActive(id) {
+        $('a#'+id).addClass("disabled")
+        btnActiveAnalisis = id;
+        if(id == "btn-notsell") {
+            $('a#btn-laku').removeClass("disabled")
+        } else {
+            $('a#btn-notsell').removeClass("disabled")
+        }
+    }
     function handlingProcessAnalysis() {
         // clear data in table
         $('#result-container').html("")
         $("#start-btn").attr("disabled", true)
         $('#modalLoading').modal({show:true,focus: true})
-
         var data = $('#analisis_form').serialize()
-        var type_analysis = $('#analisis_type').val()
-        if (type_analysis == 'terlaris') {
+        if (btnActiveAnalisis == 'btn-laku') {
             processAnalysisApriori(data)
         } else {
             processAnalysisNotSold(data)
@@ -135,10 +154,14 @@
         var tableContainer = $('#result-container')
         $.ajax({
             type: "GET",
-            url: "<?= base_url('admin/analisis/apriori');?>",
+            url: "<?= base_url('admin/analisis/aprioriv3');?>",
             data,
             success: function(result) {
                 var res = JSON.parse(result);
+
+                $("#start-btn").attr("disabled", false)
+                $('#modalLoading').modal('hide')
+
                 if (res.result.length == 0) {
                     var tr = document.createElement("tr");
                     var td = document.createElement("td")
@@ -158,8 +181,6 @@
                     tableContainer.append(tr)
                 }
                 
-                $("#start-btn").attr("disabled", false)
-                $('#modalLoading').modal('hide')
             }
         })
     }
@@ -172,6 +193,9 @@
             data,
             success: function(result) {
                 var res = JSON.parse(result);
+                $("#start-btn").attr("disabled", false)
+                $('#modalLoading').modal('hide')
+
                 if (res.result.length == 0) {
                     var tr = document.createElement("tr");
                     var td = document.createElement("td")
@@ -191,8 +215,7 @@
                     tableContainer.append(tr)
                 }
 
-                $("#start-btn").attr("disabled", false)
-                $('#modalLoading').modal('hide')
+                
                 
             }
         })   
