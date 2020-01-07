@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="footer-copy-right">
-                    <p>Copyright &copy; 2018 <a href="https://colorlib.com/wp/templates/">Colorlib</a> All rights reserved.</p>
+                    <p>Copyright &copy; 2019 Sistem Informasi </p>
                 </div>
             </div>
         </div>

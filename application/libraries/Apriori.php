@@ -93,7 +93,7 @@ class Apriori{
     }
     
     public function formattedSet(){
-        
+        $return = [];
         foreach( $this->frequentSet as $value ){
             $return[] = '{'.$value.'}';
         }
